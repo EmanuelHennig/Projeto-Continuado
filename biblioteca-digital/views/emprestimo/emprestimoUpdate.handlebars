@@ -1,0 +1,12 @@
+<form action="/emprestimoUpdate" method="post">
+  <input type="hidden" name="id" value="{{emprestimo.id}}">
+  Livro: <input type="text" name="livro" value="{{emprestimo.livro}}"><br><br>
+  Data de Empréstimo: <input type="date" name="data_emprestimo" value="{{emprestimo.data_emprestimo}}"><br><br>
+  Leitor:
+  <select name="leitorId">
+    {{#each leitores}}
+      <option value="{{id}}" {{#if (eq id ../emprestimo.leitorId)}}selected{{/if}}>{{nome}}</option>
+    {{/each}}
+  </select><br><br>
+  <input type="submit" value="Atualizar">
+</form>

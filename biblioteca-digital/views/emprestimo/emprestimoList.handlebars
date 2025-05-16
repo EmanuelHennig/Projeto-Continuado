@@ -1,0 +1,18 @@
+<table border="1">
+  <tr>
+    <th>Livro</th>
+    <th>Data de Empréstimo</th>
+    <th>Leitor</th>
+    <th>Editar</th>
+    <th>Excluir</th>
+  </tr>
+  {{#each emprestimos}}
+  <tr>
+    <td>{{livro}}</td>
+    <td>{{data_emprestimo}}</td>
+    <td>{{nomeLeitor}}</td>
+    <td><a href="/emprestimoUpdate/{{id}}">Editar</a></td>
+    <td><a href="/emprestimoDelete/{{id}}">Excluir</a></td>
+  </tr>
+  {{/each}}
+</table>

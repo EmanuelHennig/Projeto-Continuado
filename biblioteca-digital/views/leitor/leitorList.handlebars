@@ -1,0 +1,16 @@
+<table border="1">
+  <tr>
+    <th>Nome</th>
+    <th>Email</th>
+    <th>Editar</th>
+    <th>Excluir</th>
+  </tr>
+  {{#each leitores}}
+  <tr>
+    <td>{{nome}}</td>
+    <td>{{email}}</td>
+    <td><a href="/leitorUpdate/{{id}}">Editar</a></td>
+    <td><a href="/leitorDelete/{{id}}">Excluir</a></td>
+  </tr>
+  {{/each}}
+</table>

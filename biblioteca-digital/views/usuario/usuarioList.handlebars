@@ -1,0 +1,16 @@
+<table border="1">
+  <tr>
+    <th>Login</th>
+    <th>Senha</th>
+    <th>Editar</th>
+    <th>Excluir</th>
+  </tr>
+  {{#each usuarios}}
+  <tr>
+    <td>{{login}}</td>
+    <td>{{senha}}</td>
+    <td><a href="/usuarioUpdate/{{id}}">Editar</a></td>
+    <td><a href="/usuarioDelete/{{id}}">Excluir</a></td>
+  </tr>
+  {{/each}}
+</table>
