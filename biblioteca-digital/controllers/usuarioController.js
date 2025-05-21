@@ -34,5 +34,30 @@ module.exports = {
       where: { id: req.params.id }
     });
     res.redirect('/usuarioList');
-  }
+  },
+
+  async postLogin(req, res) {
+  const user = { login: req.body.login };
+
+  db.Usuario.findAll({
+    where: { login: req.body.login, senha: req.body.senha }
+  }).then(usuarios => {
+    if (usuarios.length > 0) {
+      req.session.login = req.body.login; 
+      res.render('home'); 
+    } else {
+      res.redirect('/');
+    }
+  }).catch(err => {
+    console.log(err);
+  });
+},
+
+async getLogout(req, res) {
+  req.session.destroy(); 
+  res.redirect('/');
+}
+
 };
+
+

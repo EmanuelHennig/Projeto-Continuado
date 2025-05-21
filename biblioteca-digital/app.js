@@ -1,20 +1,26 @@
 const express = require('express');
 const exphbs = require('express-handlebars');
 const routes = require('./routers/routes');
+var cookieParser = require('cookie-parser');
+var session = require('express-session');
 const app = express();
 
-// Configuração do Handlebars
+
+app.use(cookieParser());
+app.use(session({
+  secret: 'segredo_super_secreto',
+  cookie: { maxAge: 30 * 60 * 1000 } // 30 minutos
+}));
+
 app.engine('handlebars', exphbs.engine({ defaultLayout: 'main' }));
 app.set('view engine', 'handlebars');
 
-// Configurar recebimento de dados de formulário
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// Usar rotas
 app.use(routes);
 
-// Iniciar servidor
 app.listen(8081, () => {
   console.log("Servidor rodando em http://localhost:8081");
 });
+
