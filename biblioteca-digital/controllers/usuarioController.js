@@ -44,7 +44,7 @@ module.exports = {
   }).then(usuarios => {
     if (usuarios.length > 0) {
       req.session.login = req.body.login; 
-      res.render('home'); 
+      res.render('/home'); 
     } else {
       res.redirect('/');
     }

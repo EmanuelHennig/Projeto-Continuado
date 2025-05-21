@@ -5,8 +5,9 @@ const controllerLeitor = require('../controllers/leitorController');
 const controllerEmprestimo = require('../controllers/emprestimoController');
 const controllerLog = require('../controllers/logController');
 
-
-route.get("/", controllerUsuario.getList);
+route.get("/", (req, res) => {
+  res.render("usuario/usuarioLogin", {layout: "noMenu.handlebars"});
+});
 
 
 route.get("/usuarioCreate", controllerUsuario.getCreate);
@@ -41,6 +42,7 @@ route.get("/home", function (req, res) {
     res.redirect("/");
   }
 });
+  
 
 route.post("/usuarioLogin", controllerUsuario.postLogin);
 route.get("/logout", controllerUsuario.getLogout);
