@@ -3,13 +3,14 @@ const exphbs = require('express-handlebars');
 const routes = require('./routers/routes');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
+const middlewares = require ('./middlewares/middlewares');
 const app = express();
 
 
 app.use(cookieParser());
 app.use(session({
   secret: 'segredo_super_secreto',
-  cookie: { maxAge: 30 * 60 * 1000 } // 30 minutos
+  cookie: { maxAge: 30 * 60 * 1000 }
 }));
 
 app.engine('handlebars', exphbs.engine({ defaultLayout: 'main' }));
@@ -23,4 +24,7 @@ app.use(routes);
 app.listen(8081, () => {
   console.log("Servidor rodando em http://localhost:8081");
 });
+
+app.use ( middlewares.logRegister, middlewares.sessionControl )
+
 
