@@ -10,6 +10,8 @@ const app = express();
 app.use(cookieParser());
 app.use(session({
   secret: 'segredo_super_secreto',
+  resave: false, // Não salvar a sessão se não houver modificações
+  saveUninitialized: false, // Não criar sessões vazias
   cookie: { maxAge: 30 * 60 * 1000 }
 }));
 
