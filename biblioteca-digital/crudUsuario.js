@@ -2,7 +2,7 @@ const db = require('./config/db');
 const Usuario = db.Usuario;
 
 async function testarCRUD() {
-  await db.sequelize.sync({ force: true }); // cria tudo de novo
+  await db.sequelize.sync({ force: true }); // recria todas as tabelas, apagando dados anteriores
 
   // CREATE
   await Usuario.create({ login: 'emanuel', senha: '1234' });
