@@ -20,11 +20,12 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use(routes);
+app.use ( middlewares.logRegister, middlewares.sessionControl );
 
 app.listen(8081, () => {
   console.log("Servidor rodando em http://localhost:8081");
 });
 
-app.use ( middlewares.logRegister, middlewares.sessionControl )
+
 
 
