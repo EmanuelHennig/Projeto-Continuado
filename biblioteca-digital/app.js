@@ -2,16 +2,17 @@ const express = require('express');
 const exphbs = require('express-handlebars');
 const routes = require('./routers/routes');
 var cookieParser = require('cookie-parser');
-var session = require('express-session');
+const session = require('express-session');
 const middlewares = require ('./middlewares/middlewares');
-const app = express();
 
+
+const app = express();
 
 app.use(cookieParser());
 app.use(session({
   secret: 'segredo_super_secreto',
-  resave: false, // Não salvar a sessão se não houver modificações
-  saveUninitialized: false, // Não criar sessões vazias
+  resave: false,
+  saveUninitialized: false, 
   cookie: { maxAge: 30 * 60 * 1000 }
 }));
 

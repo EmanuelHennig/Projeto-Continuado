@@ -1,19 +1,24 @@
 module.exports = {
-    logRegister(req, res, next) {
-        const now = new Date().toISOString();
-        console.log(`[${now}] ${req.method} ${req.originalUrl}`);
-        next();
-    },
+  logRegister(req, res, next) {
+    console.log(req.url, req.method, new Date());
+    next();
+  },
+  sessionControl(req, res, next) {
 
-    sessionControl(req, res, next) {
-        if (req.session.login != undefined) {
-            next();
-        } else if (req.url === '/' && req.method === 'GET') {
-            next();
-        } else if (req.url === '/usuarioLogin' && req.method === 'POST') { // Permitir login
-            next();
-        } else {
-            res.redirect('/');
-        }
+    if (req.session.login) {
+      next();
     }
+    else if (req.path === '/' && req.method === 'GET') {
+      next();
+    }
+    else if (req.path === '/login' && req.method === 'POST') {
+      next();
+    }
+    else if (req.path.startsWith('/recuperarSenha')) {
+      next();
+    }
+    else {
+      res.redirect('/');
+    }
+  }
 };
