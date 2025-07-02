@@ -13,6 +13,12 @@ db.sequelize = sequelize;
 db.Usuario = require('../models/usuario')(sequelize, Sequelize);
 db.Leitor = require('../models/leitor')(sequelize, Sequelize);
 db.Emprestimo = require('../models/emprestimo')(sequelize, Sequelize);
+db.Comentario = require('../models/comentario')(sequelize, Sequelize);
+
+sequelize
+  .sync({ alter: true })    // ajusta a estrutura sem perder dados
+  .then(() => console.log('✅ Tabelas sincronizadas'))
+  .catch(err => console.error('❌ Erro ao sincronizar tabelas:', err));
 
 // Relacionamentos
 db.Leitor.hasMany(db.Emprestimo);          // 1 leitor → vários empréstimos

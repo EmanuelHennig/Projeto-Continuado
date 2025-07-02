@@ -4,11 +4,11 @@ const controllerUsuario = require('../controllers/usuarioController');
 const controllerLeitor = require('../controllers/leitorController');
 const controllerEmprestimo = require('../controllers/emprestimoController');
 const controllerLog = require('../controllers/logController');
+const controllerComentario = require('../controllers/comentarioController');
 
 route.get("/", (req, res) => {
   res.render("usuario/usuarioLogin", {layout: "noMenu.handlebars"});
 });
-
 
 route.get("/usuarioCreate", controllerUsuario.getCreate);
 route.post("/usuarioCreate", controllerUsuario.postCreate);
@@ -35,6 +35,13 @@ route.get("/logCreate", controllerLog.getCreate);
 route.post("/logCreate", controllerLog.postCreate);
 route.get("/logList", controllerLog.getList);
 
+route.get('/comentarioCreate', controllerComentario.getCreate);
+route.post('/comentarioCreate', controllerComentario.postCreate);
+route.get('/comentarioList',   controllerComentario.getList);
+route.get('/comentarioUpdate/:id', controllerComentario.getUpdate);
+route.post('/comentarioUpdate',    controllerComentario.postUpdate);
+route.get('/comentarioDelete/:id', controllerComentario.getDelete)
+
 route.get("/home", function (req, res) {
   if (req.session.login) {
     res.render("home");
@@ -43,10 +50,7 @@ route.get("/home", function (req, res) {
   }
 });
   
-
 route.post("/usuarioLogin", controllerUsuario.postLogin);
 route.get("/logout", controllerUsuario.getLogout);
-
-
 
 module.exports = route;
