@@ -1,34 +1,50 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8">
   <title>Biblioteca Digital</title>
-   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>​
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/estilo.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 </head>
 <body>
   <center>
-    <h1>Biblioteca Digital</h1>
+    <header style="text-align:center; margin-bottom: 20px;">
+      <img src="/images/logo.png" alt="Logo" width="150">
+      <h1>Biblioteca Digital</h1>
+    </header>
 
-    <a href="/usuarioCreate"><button>Cadastrar Usuário</button></a>
-    <a href="/usuarioList"><button>Listar Usuários</button></a>
+    <!-- Usuários -->
+    <a href="/usuarioCreate" class="btn btn-outline-primary mb-2">Cadastrar Usuário</a>
+    <a href="/usuarioList"   class="btn btn-outline-primary mb-2">Listar Usuários</a>
 
-    <a href="/leitorCreate"><button>Cadastrar Leitor</button></a>
-    <a href="/leitorList"><button>Listar Leitores</button></a>
+    <!-- Leitores -->
+    <a href="/leitorCreate"  class="btn btn-outline-secondary mb-2">Cadastrar Leitor</a>
+    <a href="/leitorList"    class="btn btn-outline-secondary mb-2">Listar Leitores</a>
 
-    <a href="/emprestimoCreate"><button>Registrar Empréstimo</button></a>
-    <a href="/emprestimoList"><button>Listar Empréstimos</button></a>
+    <!-- Empréstimos -->
+    <a href="/emprestimoCreate" class="btn btn-outline-success mb-2">Registrar Empréstimo</a>
+    <a href="/emprestimoList"   class="btn btn-outline-success mb-2">Listar Empréstimos</a>
 
-    <a href="/logCreate"><button>Registrar Log</button></a>
-    <a href="/logList"><button>Ver Logs</button></a>
+    <!-- Logs -->
+    <a href="/logCreate" class="btn btn-outline-info mb-2">Registrar Log</a>
+    <a href="/logList"   class="btn btn-outline-info mb-2">Ver Logs</a>
 
-    <a href="/logout"><button>Logout</button></a>
+    <!-- Comentários -->
+    <a href="/comentarioCreate" class="btn btn-outline-dark mb-2">Novo Comentário</a>
+    <a href="/comentarioList"   class="btn btn-outline-dark mb-2">Comentários</a>
 
-    <a href="/comentarioList"><button>Comentários</button></a>
-    <a href="/comentarioCreate"><button>Novo Comentário</button></a>
+    <!-- Livros -->
+    <a href="/livro/create" class="btn btn-outline-warning mb-2">Novo Livro</a>
+    <a href="/livro/list"   class="btn btn-outline-warning mb-2">Livros Disponíveis</a>
 
-    <hr>
+    <!-- Logout/Home -->
+    <a href="/home"   class="btn btn-outline-primary mb-2">Home</a>
+    <a href="/logout" class="btn btn-outline-danger mb-2">Logout</a>
+
+    <hr style="width: 80%; margin: 20px auto;">
 
     {{{ body }}}
   </center>
