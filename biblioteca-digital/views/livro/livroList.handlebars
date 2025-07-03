@@ -1,0 +1,40 @@
+<h1>Lista de Livros</h1>
+<a href="/livro/create" class="btn btn-primary mb-3">Novo Livro</a>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Título</th>
+      <th>Autor</th>
+      <th>Categoria</th>
+      <th>Capa</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each livros}}
+      <tr>
+        <td>{{titulo}}</td>
+        <td>{{autor}}</td>
+        <td>{{categoria_id.nome}}</td>
+        <td>
+          {{#if imagem}}
+            <img src="/uploads/{{imagem}}" alt="Capa" width="50">
+          {{/if}}
+        </td>
+        <td>
+          <a href="/livro/update/{{_id}}" class="btn btn-sm btn-warning">Editar</a>
+          <form action="/livro/delete/{{_id}}" method="post" style="display:inline">
+            <button
+              type="submit"
+              class="btn btn-sm btn-danger"
+              onclick="return confirm('Confirma exclusão?')"
+            >
+              Excluir
+            </button>
+          </form>
+        </td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>
