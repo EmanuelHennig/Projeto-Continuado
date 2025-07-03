@@ -8,6 +8,10 @@ const middlewares = require('./middlewares/middlewares')
 
 const app = express()
 
+const jsonServerRoutes = require('./routes/jsonServerRoutes')
+app.use(jsonServerRoutes)
+
+
 const path = require('path')
 app.use(express.static(path.join(__dirname, 'public')))
 
