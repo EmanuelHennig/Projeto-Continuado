@@ -1,80 +1,80 @@
 // routes/routes.js
-const express               = require('express');
-const multer                = require('multer');
-const path                  = require('path');
-const router                = express.Router();
+const express              = require('express');
+const multer               = require('multer');
+const path                 = require('path');
+const router               = express.Router();
 
-// controllers HTML
-const usuarioController     = require('../controllers/base/usuarioController');
-const categoriaController   = require('../controllers/base/categoriaController');
-const livroController       = require('../controllers/base/livroController');
-const autorController       = require('../controllers/base/autorController');
-const emprestimoController  = require('../controllers/base/emprestimoController');
-const logUsuarioController  = require('../controllers/base/logUsuarioController');
+const usuarioController    = require('../controllers/base/usuarioController');
+const categoriaController  = require('../controllers/base/categoriaController');
+const livroController      = require('../controllers/base/livroController');
+const autorController      = require('../controllers/base/autorController');
+const emprestimoController = require('../controllers/base/emprestimoController');
+const logUsuarioController = require('../controllers/base/logUsuarioController');
 
-// configuração do Multer para uploads
+const { logRegister, sessionControl, adminOnly } = require('../middlewares/middlewares');
+
+// Multer para upload de capas
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, 'public/uploads/'),
   filename:    (req, file, cb) => {
-    const name = (req.body.titulo || `capa-${Date.now()}`)
-      .replace(/\s+/g, '_');
+    const name = (req.body.titulo || `capa-${Date.now()}`).replace(/\s+/g, '_');
     cb(null, name + path.extname(file.originalname));
   }
 });
 const upload = multer({ storage });
 
-// rota de login e home
-router.get ('/',                  (req, res) => res.render('usuario/usuarioLogin', { layout: 'noMenu' }));
-router.post('/usuarioLogin',      usuarioController.postLogin);
-router.get ('/logout',            usuarioController.getLogout);
-router.get ('/home',              (req, res) => {
-  if (req.session.login) return res.render('home');
-  res.redirect('/');
-});
+// middlewares globais
+router.use(logRegister);
+router.use(sessionControl);
 
-// CRUD Usuários
-router.get ('/usuarioCreate',     usuarioController.getCreate);
-router.post('/usuarioCreate',     usuarioController.postCreate);
-router.get ('/usuarioList',       usuarioController.getList);
-router.get ('/usuarioUpdate/:id', usuarioController.getUpdate);
-router.post('/usuarioUpdate',     usuarioController.postUpdate);
-router.get ('/usuarioDelete/:id', usuarioController.getDelete);
+// login / logout
+router.get ('/',             (req, res) => res.render('usuario/usuarioLogin', { layout: 'noMenu' }));
+router.post('/usuarioLogin', usuarioController.postLogin);
+router.get ('/logout',       usuarioController.getLogout);
+router.get ('/home',         (req, res) => req.session.login ? res.render('home') : res.redirect('/'));
 
+// --- CRUD Usuários (admin) ---
+router.get ('/usuarioList',         usuarioController.getList);
+router.get ('/usuarioCreate',  adminOnly, usuarioController.getCreate);
+router.post('/usuarioCreate',  adminOnly, usuarioController.postCreate);
+router.get ('/usuarioUpdate/:id', adminOnly, usuarioController.getUpdate);
+router.post('/usuarioUpdate',   adminOnly, usuarioController.postUpdate);
+router.get ('/usuarioDelete/:id',adminOnly, usuarioController.getDelete);
 
-// CRUD Categorias
-router.get ('/categoriaCreate',     categoriaController.getCreate);
-router.post('/categoriaCreate',     categoriaController.postCreate);
-router.get ('/categoriaList',       categoriaController.getList);
-router.get ('/categoriaUpdate/:id', categoriaController.getUpdate);
-router.post('/categoriaUpdate',     categoriaController.postUpdate);
-router.get ('/categoriaDelete/:id', categoriaController.getDelete);
+// --- CRUD Categorias (admin) ---
+router.get ('/categoriaList',         categoriaController.getList);
+router.get ('/categoriaCreate', adminOnly, categoriaController.getCreate);
+router.post('/categoriaCreate', adminOnly, categoriaController.postCreate);
+router.get ('/categoriaUpdate/:id', adminOnly, categoriaController.getUpdate);
+router.post('/categoriaUpdate', adminOnly, categoriaController.postUpdate);
+router.get ('/categoriaDelete/:id',adminOnly, categoriaController.getDelete);
 
-// CRUD Livros
-router.get ('/livro/create',       livroController.getCreate);
-router.post('/livro/create',       upload.single('imagem'), livroController.create);
-router.get ('/livro/list',         livroController.getList);
-router.get ('/livro/update/:id',   livroController.getUpdate);
-router.post('/livro/update/:id',   upload.single('imagem'), livroController.update);
-router.post('/livro/delete/:id',   livroController.delete);
+// --- CRUD Livros ---
+router.get ('/livro/list',        livroController.getList);
+router.get ('/livro/create',  adminOnly, livroController.getCreate);
+router.post('/livro/create',  adminOnly, upload.single('imagem'), livroController.create);
+router.get ('/livro/update/:id',adminOnly, livroController.getUpdate);
+router.post('/livro/update/:id',adminOnly, upload.single('imagem'), livroController.update);
+router.post('/livro/delete/:id',adminOnly, livroController.delete);
 
-// CRUD Autores
-router.get ('/autor/create',       autorController.getCreate);
-router.post('/autor/create',       autorController.postCreate);
+// --- CRUD Autores (admin) ---
 router.get ('/autor/list',         autorController.getList);
-router.get ('/autor/update/:id',   autorController.getUpdate);
-router.post('/autor/update/:id',   autorController.postUpdate);
-router.get ('/autor/delete/:id',   autorController.getDelete);
+router.get ('/autor/create',  adminOnly, autorController.getCreate);
+router.post('/autor/create',  adminOnly, autorController.postCreate);
+router.get ('/autor/update/:id',adminOnly, autorController.getUpdate);
+router.post('/autor/update/:id',adminOnly, autorController.postUpdate);
+router.get ('/autor/delete/:id',adminOnly, autorController.getDelete);
 router.get ('/autor/livros',       autorController.getBooks);
 
-// CRUD Empréstimos
-router.get ('/emprestimo/create',      emprestimoController.getCreate);
-router.post('/emprestimo/create',      emprestimoController.postCreate);
-router.get ('/emprestimo/list',        emprestimoController.getList);
-router.get ('/emprestimo/update/:id',  emprestimoController.getUpdate);
-router.post('/emprestimo/update/:id',  emprestimoController.postUpdate);
-router.get ('/emprestimo/delete/:id',  emprestimoController.getDelete);
+// --- CRUD Empréstimos (usuário logado) ---
+router.get ('/emprestimo/list',       emprestimoController.getList);
+router.get ('/emprestimo/create',     emprestimoController.getCreate);
+router.post('/emprestimo/create',     emprestimoController.getCreate);
+router.get ('/emprestimo/update/:id', emprestimoController.getUpdate);
+router.post('/emprestimo/update/:id', emprestimoController.postUpdate);
+router.get ('/emprestimo/delete/:id', emprestimoController.getDelete);
 
-// Logs de Usuário
-router.get ('/logUsuario/list',        logUsuarioController.getList);
+// --- Logs de Usuário (usuário logado) ---
+router.get ('/logUsuario/list', logUsuarioController.getList);
 
 module.exports = router;

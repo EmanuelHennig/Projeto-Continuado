@@ -10,7 +10,7 @@ const middlewares       = require('./middlewares/middlewares')
 const swaggerUI         = require('swagger-ui-express')
 const swaggerDocument   = require('./swagger.json')
 
-const jsonServerRoutes  = require('./routes/jsonServerRoutes')
+//const jsonServerRoutes  = require('./routes/jsonServerRoutes')
 const apiRoutes         = require('./routes/apiRoutes')
 const routes            = require('./routes/routes')
 
@@ -53,7 +53,7 @@ app.use(
 )
 
 // — Rotas JSON-Server (Capítulo 17)
-app.use(jsonServerRoutes)
+//app.use(jsonServerRoutes)
 
 // — Rotas da sua API REST (protegidas / não protegidas via JWT)
 app.use('/api', apiRoutes)
