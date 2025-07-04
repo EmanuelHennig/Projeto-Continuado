@@ -1,0 +1,809 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Biblioteca Digital API",
+    "version": "1.0.0",
+    "description": "API REST da Biblioteca Digital com autenticação JWT e documentação Swagger"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8081",
+      "description": "Servidor local"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "LoginRequest": {
+        "type": "object",
+        "properties": {
+          "login": { "type": "string" },
+          "senha": { "type": "string" }
+        },
+        "required": ["login", "senha"]
+      },
+      "AuthResponse": {
+        "type": "object",
+        "properties": {
+          "token": { "type": "string" }
+        }
+      },
+      "Usuario": {
+        "type": "object",
+        "properties": {
+          "_id": { "type": "string" },
+          "nome": { "type": "string" },
+          "email": { "type": "string" },
+          "senha": { "type": "string" },
+          "tipo_usuario": { "type": "string" },
+          "cpf": { "type": "string" },
+          "telefone": { "type": "string" }
+        },
+        "required": ["nome", "email", "senha", "cpf"]
+      },
+      "Categoria": {
+        "type": "object",
+        "properties": {
+          "_id": { "type": "string" },
+          "nome": { "type": "string" }
+        },
+        "required": ["nome"]
+      },
+      "Livro": {
+        "type": "object",
+        "properties": {
+          "_id": { "type": "string" },
+          "titulo": { "type": "string" },
+          "editora": { "type": "string" },
+          "ano_publicacao": { "type": "integer" },
+          "isbn": { "type": "string" },
+          "categoria": { "$ref": "#/components/schemas/Categoria" },
+          "status": { "type": "string" },
+          "imagem": { "type": "string" }
+        },
+        "required": ["titulo", "categoria"]
+      },
+      "Autor": {
+        "type": "object",
+        "properties": {
+          "_id": { "type": "string" },
+          "nome": { "type": "string" }
+        },
+        "required": ["nome"]
+      },
+      "Reserva": {
+        "type": "object",
+        "properties": {
+          "_id": { "type": "string" },
+          "usuario": { "$ref": "#/components/schemas/Usuario" },
+          "livro": { "$ref": "#/components/schemas/Livro" },
+          "data_reserva": { "type": "string", "format": "date-time" },
+          "data_limite_retirada": { "type": "string", "format": "date-time" },
+          "status": { "type": "string" }
+        },
+        "required": ["usuario", "livro", "data_limite_retirada"]
+      },
+      "Emprestimo": {
+        "type": "object",
+        "properties": {
+          "_id": { "type": "string" },
+          "usuario": { "$ref": "#/components/schemas/Usuario" },
+          "livro": { "$ref": "#/components/schemas/Livro" },
+          "data_emprestimo": { "type": "string", "format": "date-time" },
+          "data_devolucao_prevista": { "type": "string", "format": "date-time" },
+          "data_devolucao": { "type": "string", "format": "date-time" }
+        },
+        "required": ["usuario", "livro", "data_devolucao_prevista"]
+      },
+      "LivroAutor": {
+        "type": "object",
+        "properties": {
+          "_id": { "type": "string" },
+          "livro": { "$ref": "#/components/schemas/Livro" },
+          "autor": { "$ref": "#/components/schemas/Autor" }
+        },
+        "required": ["livro", "autor"]
+      },
+      "LogUsuario": {
+        "type": "object",
+        "properties": {
+          "_id": { "type": "string" },
+          "usuario": { "$ref": "#/components/schemas/Usuario" },
+          "acao": { "type": "string" },
+          "livro": { "$ref": "#/components/schemas/Livro" },
+          "data": { "type": "string", "format": "date-time" }
+        },
+        "required": ["usuario", "acao"]
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/api/login": {
+      "post": {
+        "summary": "Faz login e retorna um JWT",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/LoginRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Token gerado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AuthResponse" }
+              }
+            }
+          },
+          "401": { "description": "Senha incorreta" },
+          "404": { "description": "Usuário não encontrado" }
+        }
+      }
+    },
+    "/api/usuarios": {
+      "get": {
+        "summary": "Lista todos os usuários",
+        "responses": {
+          "200": {
+            "description": "Lista de usuários",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Usuario" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Cria um novo usuário",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Usuario" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Usuário criado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Usuario" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/usuarios/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": { "type": "string" }
+        }
+      ],
+      "get": {
+        "summary": "Busca usuário por ID",
+        "responses": {
+          "200": {
+            "description": "Usuário encontrado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Usuario" }
+              }
+            }
+          },
+          "404": { "description": "Usuário não encontrado" }
+        }
+      },
+      "put": {
+        "summary": "Atualiza um usuário existente",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Usuario" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Usuário atualizado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Usuario" }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Exclui um usuário",
+        "responses": {
+          "204": { "description": "Usuário excluído" }
+        }
+      }
+    },
+    "/api/categorias": {
+      "get": {
+        "summary": "Lista todas as categorias",
+        "responses": {
+          "200": {
+            "description": "Lista de categorias",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Categoria" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Cria uma nova categoria",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Categoria" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Categoria criada",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Categoria" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/categorias/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": { "type": "string" }
+        }
+      ],
+      "get": {
+        "summary": "Busca categoria por ID",
+        "responses": {
+          "200": {
+            "description": "Categoria encontrada",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Categoria" }
+              }
+            }
+          },
+          "404": { "description": "Categoria não encontrada" }
+        }
+      },
+      "put": {
+        "summary": "Atualiza uma categoria",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Categoria" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Categoria atualizada",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Categoria" }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Exclui uma categoria",
+        "responses": {
+          "204": { "description": "Categoria excluída" }
+        }
+      }
+    },
+    "/api/livros": {
+      "get": {
+        "summary": "Lista todos os livros",
+        "responses": {
+          "200": {
+            "description": "Lista de livros",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Livro" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Cria um novo livro",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Livro" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Livro criado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Livro" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/livros/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": { "type": "string" }
+        }
+      ],
+      "get": {
+        "summary": "Busca livro por ID",
+        "responses": {
+          "200": {
+            "description": "Livro encontrado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Livro" }
+              }
+            }
+          },
+          "404": { "description": "Livro não encontrado" }
+        }
+      },
+      "put": {
+        "summary": "Atualiza um livro",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Livro" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Livro atualizado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Livro" }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Exclui um livro",
+        "responses": {
+          "204": { "description": "Livro excluído" }
+        }
+      }
+    },
+    "/api/autores": {
+      "get": {
+        "summary": "Lista todos os autores",
+        "responses": {
+          "200": {
+            "description": "Lista de autores",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Autor" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Cria um novo autor",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Autor" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Autor criado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Autor" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/autores/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": { "type": "string" }
+        }
+      ],
+      "get": {
+        "summary": "Busca autor por ID",
+        "responses": {
+          "200": {
+            "description": "Autor encontrado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Autor" }
+              }
+            }
+          },
+          "404": { "description": "Autor não encontrado" }
+        }
+      },
+      "put": {
+        "summary": "Atualiza um autor",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Autor" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Autor atualizado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Autor" }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Exclui um autor",
+        "responses": {
+          "204": { "description": "Autor excluído" }
+        }
+      }
+    },
+    "/api/reservas": {
+      "get": {
+        "summary": "Lista todas as reservas",
+        "responses": {
+          "200": {
+            "description": "Lista de reservas",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Reserva" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Cria uma nova reserva",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Reserva" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Reserva criada",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Reserva" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/reservas/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": { "type": "string" }
+        }
+      ],
+      "get": {
+        "summary": "Busca reserva por ID",
+        "responses": {
+          "200": {
+            "description": "Reserva encontrada",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Reserva" }
+              }
+            }
+          },
+          "404": { "description": "Reserva não encontrada" }
+        }
+      },
+      "put": {
+        "summary": "Atualiza uma reserva",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Reserva" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Reserva atualizada",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Reserva" }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Exclui uma reserva",
+        "responses": {
+          "204": { "description": "Reserva excluída" }
+        }
+      }
+    },
+    "/api/emprestimos": {
+      "get": {
+        "summary": "Lista todos os empréstimos",
+        "responses": {
+          "200": {
+            "description": "Lista de empréstimos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Emprestimo" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Cria um novo empréstimo",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Emprestimo" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Empréstimo criado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Emprestimo" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/emprestimos/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": { "type": "string" }
+        }
+      ],
+      "get": {
+        "summary": "Busca empréstimo por ID",
+        "responses": {
+          "200": {
+            "description": "Empréstimo encontrado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Emprestimo" }
+              }
+            }
+          },
+          "404": { "description": "Empréstimo não encontrado" }
+        }
+      },
+      "put": {
+        "summary": "Atualiza um empréstimo",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Emprestimo" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Empréstimo atualizado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Emprestimo" }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Exclui um empréstimo",
+        "responses": {
+          "204": { "description": "Empréstimo excluído" }
+        }
+      }
+    },
+    "/api/livro-autores": {
+      "get": {
+        "summary": "Lista todas as associações Livro–Autor",
+        "responses": {
+          "200": {
+            "description": "Lista de associações",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/LivroAutor" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Cria uma nova associação Livro–Autor",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/LivroAutor" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Associação criada",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/LivroAutor" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/livro-autores/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": { "type": "string" }
+        }
+      ],
+      "get": {
+        "summary": "Busca associação por ID",
+        "responses": {
+          "200": {
+            "description": "Associação encontrada",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/LivroAutor" }
+              }
+            }
+          },
+          "404": { "description": "Associação não encontrada" }
+        }
+      },
+      "delete": {
+        "summary": "Exclui uma associação",
+        "responses": {
+          "204": { "description": "Associação excluída" }
+        }
+      }
+    },
+    "/api/logs-usuarios": {
+      "get": {
+        "summary": "Lista todos os logs de usuário",
+        "responses": {
+          "200": {
+            "description": "Lista de logs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/LogUsuario" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/logs-usuarios/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": { "type": "string" }
+        }
+      ],
+      "get": {
+        "summary": "Busca log de usuário por ID",
+        "responses": {
+          "200": {
+            "description": "Log encontrado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/LogUsuario" }
+              }
+            }
+          },
+          "404": { "description": "Log não encontrado" }
+        }
+      }
+    }
+  }
+}

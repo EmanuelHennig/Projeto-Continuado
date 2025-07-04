@@ -1,0 +1,11 @@
+{{!-- views/categoria/categoriaCreate.handlebars --}}
+<h2>Cadastrar Categoria</h2>
+
+<form action="/categoriaCreate" method="post" class="w-50 mx-auto mt-4">
+  <div class="form-group">
+    <label for="nome">Nome da Categoria</label>
+    <input type="text" id="nome" name="nome" class="form-control" required>
+  </div>
+  <button type="submit" class="btn btn-primary">Salvar</button>
+  <a href="/categoriaList" class="btn btn-secondary">Cancelar</a>
+</form>

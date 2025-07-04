@@ -1,16 +1,35 @@
-<table border="1">
-  <tr>
-    <th>Login</th>
-    <th>Senha</th>
-    <th>Editar</th>
-    <th>Excluir</th>
-  </tr>
-  {{#each usuarios}}
-  <tr>
-    <td>{{login}}</td>
-    <td>{{senha}}</td>
-    <td><a href="/usuarioUpdate/{{id}}">Editar</a></td>
-    <td><a href="/usuarioDelete/{{id}}">Excluir</a></td>
-  </tr>
-  {{/each}}
+{{!-- views/usuario/usuarioList.handlebars --}}
+<h2>Usuários Cadastrados</h2>
+
+<table border="1" cellpadding="8" cellspacing="0" style="width:100%; margin-top:1em;">
+  <thead>
+    <tr>
+      <th>Nome</th>
+      <th>Email</th>
+      <th>Tipo</th>
+      <th>CPF</th>
+      <th>Telefone</th>
+      <th>Editar</th>
+      <th>Excluir</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each usuarios}}
+      <tr>
+        <td>{{nome}}</td>
+        <td>{{email}}</td>
+        <td>{{tipo_usuario}}</td>
+        <td>{{cpf}}</td>
+        <td>{{telefone}}</td>
+        <td><a href="/usuarioUpdate/{{_id}}">Editar</a></td>
+        <td><a href="/usuarioDelete/{{_id}}">Excluir</a></td>
+      </tr>
+    {{/each}}
+
+    {{#unless usuarios.length}}
+      <tr>
+        <td colspan="7" style="text-align:center;">Nenhum usuário encontrado.</td>
+      </tr>
+    {{/unless}}
+  </tbody>
 </table>

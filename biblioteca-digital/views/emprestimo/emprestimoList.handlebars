@@ -1,18 +1,37 @@
-<table border="1">
-  <tr>
-    <th>Livro</th>
-    <th>Data de Empréstimo</th>
-    <th>Leitor</th>
-    <th>Editar</th>
-    <th>Excluir</th>
-  </tr>
-  {{#each emprestimos}}
-  <tr>
-    <td>{{livro}}</td>
-    <td>{{data_emprestimo}}</td>
-    <td>{{nomeLeitor}}</td>
-    <td><a href="/emprestimoUpdate/{{id}}">Editar</a></td>
-    <td><a href="/emprestimoDelete/{{id}}">Excluir</a></td>
-  </tr>
-  {{/each}}
+{{!-- views/emprestimo/emprestimoList.handlebars --}}
+<h2>Empréstimos Registrados</h2>
+
+<table class="table table-striped" style="width:100%; margin-top:1em;">
+  <thead>
+    <tr>
+      <th>Livro</th>
+      <th>Data de Empréstimo</th>
+      <th>Leitor</th>
+      <th>Editar</th>
+      <th>Excluir</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each emprestimos}}
+      <tr>
+        <td>{{this.livro.titulo}}</td>
+        <td>{{this.data_emprestimo}}</td>
+        <td>{{this.usuario.nome}}</td>
+        <td>
+          <a href="/emprestimo/update/{{this._id}}" class="btn btn-sm btn-primary">
+            Editar
+          </a>
+        </td>
+        <td>
+          <a href="/emprestimo/delete/{{this._id}}" class="btn btn-sm btn-danger">
+            Excluir
+          </a>
+        </td>
+      </tr>
+    {{else}}
+      <tr>
+        <td colspan="5" class="text-center">Nenhum empréstimo encontrado.</td>
+      </tr>
+    {{/each}}
+  </tbody>
 </table>

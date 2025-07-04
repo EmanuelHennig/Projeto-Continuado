@@ -1,0 +1,28 @@
+{{!-- views/categoria/categoriaList.handlebars --}}
+<h2>Lista de Categorias</h2>
+
+<table class="table table-striped mt-4">
+  <thead>
+    <tr>
+      <th>Nome</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each categorias}}
+      <tr>
+        <td>{{this.nome}}</td>
+        <td>
+          <a href="/categoriaUpdate/{{this._id}}" class="btn btn-sm btn-primary">Editar</a>
+          <a href="/categoriaDelete/{{this._id}}" class="btn btn-sm btn-danger">Excluir</a>
+        </td>
+      </tr>
+    {{else}}
+      <tr>
+        <td colspan="2" class="text-center">Nenhuma categoria cadastrada.</td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>
+
+<a href="/categoriaCreate" class="btn btn-success mt-3">Nova Categoria</a>

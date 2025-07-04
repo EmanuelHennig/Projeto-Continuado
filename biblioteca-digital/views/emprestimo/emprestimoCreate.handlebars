@@ -1,11 +1,36 @@
-<form action="/emprestimoCreate" method="post">
-  Livro: <input type="text" name="livro"><br><br>
-  Data de Empréstimo: <input type="date" name="data_emprestimo"><br><br>
-  <label>Leitor:</label>
-  <select name="leitorId">
-    {{#each leitores}}
-      <option value="{{id}}">{{nome}}</option>
-    {{/each}}
-  </select><br><br>
-  <input type="submit" value="Cadastrar Empréstimo">
+{{!-- views/emprestimo/emprestimoCreate.handlebars --}}
+<h2>Registrar Empréstimo</h2>
+
+<form action="/emprestimo/create" method="post">
+  <div class="form-group">
+    <label for="livro">Livro:</label>
+    <select id="livro" name="livro" class="form-control" required>
+      <option value="">Selecione um livro</option>
+      {{#each livros}}
+        <option value="{{this._id}}">{{this.titulo}}</option>
+      {{/each}}
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="usuario">Leitor:</label>
+    <select id="usuario" name="usuario" class="form-control" required>
+      <option value="">Selecione um leitor</option>
+      {{#each usuarios}}
+        <option value="{{this._id}}">{{this.nome}}</option>
+      {{/each}}
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="data_emprestimo">Data de Empréstimo:</label>
+    <input type="date" id="data_emprestimo" name="data_emprestimo" class="form-control" required>
+  </div>
+
+  <div class="form-group">
+    <label for="data_devolucao_prevista">Data de Devolução Prevista:</label>
+    <input type="date" id="data_devolucao_prevista" name="data_devolucao_prevista" class="form-control" required>
+  </div>
+
+  <button type="submit" class="btn btn-success">Cadastrar Empréstimo</button>
 </form>

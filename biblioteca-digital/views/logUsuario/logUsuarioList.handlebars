@@ -1,0 +1,33 @@
+{{!-- views/logUsuario/logUsuarioList.handlebars --}}
+<h2>Logs de Usuário</h2>
+
+<table class="table table-striped" style="width:100%; margin-top:1em;">
+  <thead>
+    <tr>
+      <th>Usuário</th>
+      <th>Ação</th>
+      <th>Livro</th>
+      <th>Data</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each logs}}
+      <tr>
+        <td>{{this.usuario.nome}}</td>
+        <td>{{this.acao}}</td>
+        <td>
+          {{#if this.livro}}
+            {{this.livro.titulo}}
+          {{else}}
+            &mdash;
+          {{/if}}
+        </td>
+        <td>{{this.data}}</td>
+      </tr>
+    {{else}}
+      <tr>
+        <td colspan="4" class="text-center">Nenhum log encontrado.</td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>

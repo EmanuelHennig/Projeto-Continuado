@@ -1,6 +1,48 @@
+{{!-- views/usuario/usuarioUpdate.handlebars --}}
+<h2>Editar Usuário</h2>
+
 <form action="/usuarioUpdate" method="post">
-  <input type="hidden" name="id" value="{{usuario.id}}">
-  Login: <input type="text" name="login" value="{{usuario.login}}"><br><br>
-  Senha: <input type="password" name="senha" value="{{usuario.senha}}"><br><br>
-  <input type="submit" value="Atualizar">
+  <input type="hidden" name="id" value="{{usuario._id}}">
+
+  <div class="form-group">
+    <label for="nome">Nome:</label>
+    <input type="text" id="nome" name="nome" class="form-control" 
+           value="{{usuario.nome}}" required>
+  </div>
+
+  <div class="form-group">
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" class="form-control" 
+           value="{{usuario.email}}" required>
+  </div>
+
+  <div class="form-group">
+    <label for="senha">Senha:</label>
+    <input type="password" id="senha" name="senha" class="form-control" 
+           value="{{usuario.senha}}" required>
+  </div>
+
+  <div class="form-group">
+    <label for="tipo_usuario">Tipo de Usuário:</label>
+    <select id="tipo_usuario" name="tipo_usuario" class="form-control" required>
+      <option value="{{usuario.tipo_usuario}}">{{usuario.tipo_usuario}}</option>
+      <option value="aluno">aluno</option>
+      <option value="professor">professor</option>
+      <option value="admin">admin</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="cpf">CPF:</label>
+    <input type="text" id="cpf" name="cpf" class="form-control" 
+           value="{{usuario.cpf}}" required>
+  </div>
+
+  <div class="form-group">
+    <label for="telefone">Telefone:</label>
+    <input type="text" id="telefone" name="telefone" class="form-control" 
+           value="{{usuario.telefone}}">
+  </div>
+
+  <button type="submit" class="btn btn-primary">Atualizar</button>
 </form>

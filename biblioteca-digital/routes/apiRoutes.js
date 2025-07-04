@@ -1,39 +1,51 @@
-const express = require('express')
-const router = express.Router()
-const livroApi = require('../controllers/api/livroApiController')
-const leitorApi = require('../controllers/api/leitorApiController')
-const emprestimoApi = require('../controllers/api/emprestimoApiController')
-const comentarioApi = require('../controllers/api/comentarioApiController')
-const usuarioApi = require('../controllers/api/usuarioApiController')
+// routes/apiRoutes.js
+const express = require('express');
+const router  = express.Router();
 
-router.get('/livros', livroApi.getAll)
-router.get('/livros/:id', livroApi.getById)
-router.post('/livros', livroApi.create)
-router.put('/livros/:id', livroApi.update)
-router.delete('/livros/:id', livroApi.remove)
+const usuarioApi    = require('../controllers/api/usuarioApiController');
+const categoriaApi  = require('../controllers/api/categoriaApiController');
+const livroApi      = require('../controllers/api/livroApiController');
+const autorApi      = require('../controllers/api/autorApiController');
+const emprestimoApi = require('../controllers/api/emprestimoApiController');
+const logUsuarioApi = require('../controllers/api/logUsuarioApiController');
 
-router.get('/leitores', leitorApi.getAll)
-router.get('/leitores/:id', leitorApi.getById)
-router.post('/leitores', leitorApi.create)
-router.put('/leitores/:id', leitorApi.update)
-router.delete('/leitores/:id', leitorApi.remove)
+// Usuários
+router.get   ('/usuarios',     usuarioApi.getAll);
+router.get   ('/usuarios/:id', usuarioApi.getById);
+router.post  ('/usuarios',     usuarioApi.create);
+router.put   ('/usuarios/:id', usuarioApi.update);
+router.delete('/usuarios/:id', usuarioApi.remove);
 
-router.get('/emprestimos', emprestimoApi.getAll)
-router.get('/emprestimos/:id', emprestimoApi.getById)
-router.post('/emprestimos', emprestimoApi.create)
-router.put('/emprestimos/:id', emprestimoApi.update)
-router.delete('/emprestimos/:id', emprestimoApi.remove)
+// Categorias
+router.get   ('/categorias',     categoriaApi.getAll);
+router.get   ('/categorias/:id', categoriaApi.getById);
+router.post  ('/categorias',     categoriaApi.create);
+router.put   ('/categorias/:id', categoriaApi.update);
+router.delete('/categorias/:id', categoriaApi.remove);
 
-router.get('/comentarios', comentarioApi.getAll)
-router.get('/comentarios/:id', comentarioApi.getById)
-router.post('/comentarios', comentarioApi.create)
-router.put('/comentarios/:id', comentarioApi.update)
-router.delete('/comentarios/:id', comentarioApi.remove)
+// Livros
+router.get   ('/livros',     livroApi.getAll);
+router.get   ('/livros/:id', livroApi.getById);
+router.post  ('/livros',     livroApi.create);
+router.put   ('/livros/:id', livroApi.update);
+router.delete('/livros/:id', livroApi.remove);
 
-router.get('/usuarios', usuarioApi.getAll)
-router.get('/usuarios/:id', usuarioApi.getById)
-router.post('/usuarios', usuarioApi.create)
-router.put('/usuarios/:id', usuarioApi.update)
-router.delete('/usuarios/:id', usuarioApi.remove)
+// Autores
+router.get   ('/autores',     autorApi.getAll);
+router.get   ('/autores/:id', autorApi.getById);
+router.post  ('/autores',     autorApi.create);
+router.put   ('/autores/:id', autorApi.update);
+router.delete('/autores/:id', autorApi.remove);
 
-module.exports = router
+// Empréstimos
+router.get   ('/emprestimos',     emprestimoApi.getAll);
+router.get   ('/emprestimos/:id', emprestimoApi.getById);
+router.post  ('/emprestimos',     emprestimoApi.create);
+router.put   ('/emprestimos/:id', emprestimoApi.update);
+router.delete('/emprestimos/:id', emprestimoApi.remove);
+
+// Logs de Usuário
+router.get('/logs-usuarios',     logUsuarioApi.getAll);
+router.get('/logs-usuarios/:id', logUsuarioApi.getById);
+
+module.exports = router;

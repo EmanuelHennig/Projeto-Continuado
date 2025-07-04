@@ -1,29 +1,39 @@
-const mongoose = require('mongoose')
-const Schema   = mongoose.Schema
+// models/livro.js
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
 const livroSchema = new Schema({
   titulo: {
     type: String,
     required: true
   },
-  autor: {
-    type: String,
-    required: true
+  editora: {
+    type: String
   },
-  ano: {
+  ano_publicacao: {
     type: Number
   },
   isbn: {
-    type: String
+    type: String,
+    unique: true
   },
-  categoria_id: {
+  categoria: {
     type: Schema.Types.ObjectId,
     ref: 'Categoria',
     required: true
   },
-  imagem: {
-    type: String
-  }
-})
+  status: {
+    type: String,
+    enum: ['disponível', 'emprestado', 'reservado'],
+    default: 'disponível'
+  },
+  autores: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Autor'
+  }]
+}, {
+  collection: 'livros',
+  timestamps: true
+});
 
-module.exports = mongoose.model('Livro', livroSchema)
+module.exports = mongoose.model('Livro', livroSchema);

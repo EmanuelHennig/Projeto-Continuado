@@ -1,0 +1,20 @@
+<h2>Livros por Autor</h2>
+
+{{#each autores}}
+  <div class="card mb-3 w-75 mx-auto">
+    <div class="card-header">
+      <strong>{{this.nome}}</strong>
+    </div>
+    <ul class="list-group list-group-flush">
+      {{#if this.livros.length}}
+        {{#each this.livros}}
+          <li class="list-group-item">{{this.titulo}}</li>
+        {{/each}}
+      {{else}}
+        <li class="list-group-item text-muted">&mdash; nenhum livro cadastrado &mdash;</li>
+      {{/if}}
+    </ul>
+  </div>
+{{else}}
+  <p class="text-center">Nenhum autor encontrado.</p>
+{{/each}}

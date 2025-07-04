@@ -1,25 +1,26 @@
-// controllers/api/livroApiController.js
 const Livro = require('../../models/livro')
 
 module.exports = {
   async getAll(req, res) {
     try {
-      const livros = await Livro.find().populate('categoria_id')
-      res.json(livros)
+      const lista = await Livro.find().populate('categoria')
+      return res.status(200).json(lista)
     } catch (err) {
       console.error(err)
-      res.status(500).json({ error: 'falha ao listar livros' })
+      return res.status(500).json({ error: 'falha ao listar livros' })
     }
   },
 
   async getById(req, res) {
     try {
-      const livro = await Livro.findById(req.params.id).populate('categoria_id')
-      if (!livro) return res.status(404).json({ error: 'livro não encontrado' })
-      res.json(livro)
+      const item = await Livro.findById(req.params.id).populate('categoria')
+      if (!item) {
+        return res.status(404).json({ error: 'livro não encontrado' })
+      }
+      return res.status(200).json(item)
     } catch (err) {
       console.error(err)
-      res.status(500).json({ error: 'falha ao obter livro' })
+      return res.status(500).json({ error: 'falha ao obter livro' })
     }
   },
 
@@ -27,10 +28,10 @@ module.exports = {
     try {
       const novo = new Livro(req.body)
       await novo.save()
-      res.status(201).json(novo)
+      return res.status(201).json(novo)
     } catch (err) {
       console.error(err)
-      res.status(500).json({ error: 'falha ao criar livro' })
+      return res.status(500).json({ error: 'falha ao criar livro' })
     }
   },
 
@@ -41,22 +42,26 @@ module.exports = {
         req.body,
         { new: true }
       )
-      if (!atualizado) return res.status(404).json({ error: 'livro não encontrado' })
-      res.json(atualizado)
+      if (!atualizado) {
+        return res.status(404).json({ error: 'livro não encontrado' })
+      }
+      return res.status(200).json(atualizado)
     } catch (err) {
       console.error(err)
-      res.status(500).json({ error: 'falha ao atualizar livro' })
+      return res.status(500).json({ error: 'falha ao atualizar livro' })
     }
   },
 
   async remove(req, res) {
     try {
       const excluido = await Livro.findByIdAndDelete(req.params.id)
-      if (!excluido) return res.status(404).json({ error: 'livro não encontrado' })
-      res.json({ message: 'livro excluído' })
+      if (!excluido) {
+        return res.status(404).json({ error: 'livro não encontrado' })
+      }
+      return res.status(204).send()
     } catch (err) {
       console.error(err)
-      res.status(500).json({ error: 'falha ao excluir livro' })
+      return res.status(500).json({ error: 'falha ao excluir livro' })
     }
   }
 }

@@ -1,111 +1,100 @@
-const db = require('../../config/db');
+// controllers/base/usuarioController.js
+const Usuario = require('../../models/usuario')
 
 module.exports = {
-  async getLogin(req, res) {
-    res.render('usuario/usuarioLogin', { layout: 'noMenu' });
+  // Processa o login
+  postLogin: async (req, res) => {
+    try {
+      const { email, senha } = req.body
+      const user = await Usuario.findOne({ email }).lean()
+      if (!user) {
+        return res.render('usuario/usuarioLogin', {
+          layout: 'noMenu',
+          error: 'Usuário não encontrado'
+        })
+      }
+      if (user.senha !== senha) {
+        return res.render('usuario/usuarioLogin', {
+          layout: 'noMenu',
+          error: 'Senha incorreta'
+        })
+      }
+      req.session.login  = true
+      req.session.userId = user._id
+      req.session.tipo   = user.tipo_usuario
+      return res.redirect('/home')
+    } catch (err) {
+      console.error(err)
+      return res.status(500).send('Erro ao processar login')
+    }
   },
 
-  async postLogin(req, res) {
-    const { login, senha } = req.body;
-
-    db.Usuario.findAll({
-        where: { login, senha }
+  // Faz logout destruindo a sessão
+  getLogout: (req, res) => {
+    req.session.destroy(err => {
+      if (err) console.error(err)
+      res.redirect('/')
     })
-    .then((usuarios) => {
-        if (usuarios.length > 0) {
-            req.session.login = login; // Configura a sessão
-            return res.redirect('/home'); // Redireciona para a página inicial
-        } else {
-            return res.redirect('/'); // Redireciona para a página de login
-        }
-    })
-    .catch((err) => {
-        console.log('Erro no postLogin:', err);
-        return res.redirect('/');
-    });
   },
 
-  
-  async getLogout(req, res) {
-    req.session.destroy();
-    res.redirect('/');
+  // Exibe o formulário de cadastro
+  getCreate: (req, res) => {
+    res.render('usuario/usuarioCreate')
   },
 
-  
-  async getCreate(req, res) {
-    res.render('usuario/usuarioCreate');
+  // Processa o cadastro de um novo usuário
+  postCreate: async (req, res) => {
+    try {
+      await new Usuario(req.body).save()
+      res.redirect('/usuarioList')
+    } catch (err) {
+      console.error(err)
+      res.status(500).send('Erro ao criar usuário')
+    }
   },
 
- 
-  async postCreate(req, res) {
-    const { login, senha } = req.body;
-
-    db.Usuario.create({ login, senha })
-      .then(() => {
-        res.redirect('/usuarioList');
-      })
-      .catch((err) => {
-        console.log('Erro no postCreate:', err);
-        res.redirect('/usuarioCreate');
-      });
+  // Lista todos os usuários (usando .lean() para retornar objetos literais)
+  getList: async (req, res) => {
+    try {
+      const usuarios = await Usuario.find().lean()
+      console.log('→ usuarios encontrados:', usuarios)
+      res.render('usuario/usuarioList', { usuarios })
+    } catch (err) {
+      console.error(err)
+      res.status(500).send('Erro ao listar usuários')
+    }
   },
 
- 
-  async getList(req, res) {
-    db.Usuario.findAll()
-      .then((usuarios) => {
-        res.render('usuario/usuarioList', {
-          usuarios: usuarios.map((user) => user.toJSON())
-        });
-      })
-      .catch((err) => {
-        console.log('Erro no getList:', err);
-        res.redirect('/home');
-      });
+  // Exibe o formulário de edição carregando os dados do usuário
+  getUpdate: async (req, res) => {
+    try {
+      const usuario = await Usuario.findById(req.params.id).lean()
+      res.render('usuario/usuarioUpdate', { usuario })
+    } catch (err) {
+      console.error(err)
+      res.status(500).send('Erro ao carregar usuário para edição')
+    }
   },
 
-  
-  async getUpdate(req, res) {
-    const { id } = req.params;
-    db.Usuario.findByPk(id)
-      .then((usuario) => {
-        if (usuario) {
-          res.render('usuario/usuarioUpdate', { usuario: usuario.toJSON() });
-        } else {
-          res.redirect('/usuarioList');
-        }
-      })
-      .catch((err) => {
-        console.log('Erro no getUpdate:', err);
-        res.redirect('/usuarioList');
-      });
+  // Processa a atualização dos dados de um usuário
+  postUpdate: async (req, res) => {
+    try {
+      await Usuario.findByIdAndUpdate(req.body.id, req.body)
+      res.redirect('/usuarioList')
+    } catch (err) {
+      console.error(err)
+      res.status(500).send('Erro ao atualizar usuário')
+    }
   },
 
-  async postUpdate(req, res) {
-    const { id, login, senha } = req.body;
-
-    db.Usuario.update(
-      { login, senha },
-      { where: { id } }
-    )
-      .then(() => {
-        res.redirect('/usuarioList');
-      })
-      .catch((err) => {
-        console.log('Erro no postUpdate:', err);
-        res.redirect('/usuarioList');
-      });
-  },
-
-  async getDelete(req, res) {
-    const { id } = req.params;
-    db.Usuario.destroy({ where: { id } })
-      .then(() => {
-        res.redirect('/usuarioList');
-      })
-      .catch((err) => {
-        console.log('Erro no getDelete:', err);
-        res.redirect('/usuarioList');
-      });
+  // Exclui um usuário pelo ID
+  getDelete: async (req, res) => {
+    try {
+      await Usuario.findByIdAndDelete(req.params.id)
+      res.redirect('/usuarioList')
+    } catch (err) {
+      console.error(err)
+      res.status(500).send('Erro ao excluir usuário')
+    }
   }
-};
+}

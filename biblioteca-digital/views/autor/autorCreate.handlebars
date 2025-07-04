@@ -1,0 +1,12 @@
+{{!-- views/autor/autorCreate.handlebars --}}
+<h2>Cadastrar Autor</h2>
+
+<form action="/autor/create" method="post" class="w-50 mx-auto mt-4">
+  <div class="form-group">
+    <label for="nome">Nome do Autor</label>
+    <input type="text" id="nome" name="nome" class="form-control" required>
+  </div>
+
+  <button type="submit" class="btn btn-primary">Salvar</button>
+  <a href="/autor/list" class="btn btn-secondary">Cancelar</a>
+</form>

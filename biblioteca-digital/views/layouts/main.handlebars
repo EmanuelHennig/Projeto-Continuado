@@ -1,3 +1,4 @@
+{{!-- views/layouts/main.handlebars --}}
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,33 +13,39 @@
 <body>
   <center>
     <header style="text-align:center; margin-bottom: 20px;">
-      <img src="/images/logo.png" alt="Logo" width="150">
+      <img src="biblioteca.jpeg" alt="Logo" width="150">
       <h1>Biblioteca Digital</h1>
     </header>
 
     <!-- Usuários -->
-    <a href="/usuarioCreate"      class="btn btn-outline-primary mb-2">Cadastrar Usuário</a>
-    <a href="/usuarioList"        class="btn btn-outline-primary mb-2">Listar Usuários</a>
-    <!-- Leitores -->
-    <a href="/leitorCreate"       class="btn btn-outline-secondary mb-2">Cadastrar Leitor</a>
-    <a href="/leitorList"         class="btn btn-outline-secondary mb-2">Listar Leitores</a>
+    <a href="/usuarioCreate" class="btn btn-outline-primary mb-2">Cadastrar Usuário</a>
+    <a href="/usuarioList"   class="btn btn-outline-primary mb-2">Listar Usuários</a>
+
+    <a href="/autor/create" class="btn btn-outline-secondary mb-2">Cadastrar Autor</a>
+    <a href="/autor/list" class="btn btn-outline-secondary mb-2">Listar Autores</a>
+    <a href="/autor/livros" class="btn btn-outline-secondary mb-2">Livros por Autor</a>
+
+    <!-- Categorias -->
+    <a href="/categoriaCreate"    class="btn btn-outline-primary mb-2">Cadastrar Categoria</a>
+    <a href="/categoriaList"      class="btn btn-outline-primary mb-2">Listar Categorias</a>
+
     <!-- Empréstimos -->
-    <a href="/emprestimoCreate"   class="btn btn-outline-success mb-2">Registrar Empréstimo</a>
-    <a href="/emprestimoList"     class="btn btn-outline-success mb-2">Listar Empréstimos</a>
+    <a href="/emprestimo/create" class="btn btn-outline-success mb-2">Registrar Empréstimo</a>
+    <a href="/emprestimo/list"   class="btn btn-outline-success mb-2">Listar Empréstimos</a>
+
     <!-- Logs -->
-    <a href="/logCreate"          class="btn btn-outline-info mb-2">Registrar Log</a>
-    <a href="/logList"            class="btn btn-outline-info mb-2">Ver Logs</a>
-    <!-- Comentários -->
-    <a href="/comentarioCreate"   class="btn btn-outline-dark mb-2">Novo Comentário</a>
-    <a href="/comentarioList"     class="btn btn-outline-dark mb-2">Comentários</a>
+    <a href="/logUsuario/list" class="btn btn-outline-info mb-2">Ver Logs</a>
+
     <!-- Livros -->
-    <a href="/livro/create"       class="btn btn-outline-warning mb-2">Novo Livro</a>
-    <a href="/livro/list"         class="btn btn-outline-warning mb-2">Livros Disponíveis</a>
+    <a href="/livro/create" class="btn btn-outline-warning mb-2">Novo Livro</a>
+    <a href="/livro/list"   class="btn btn-outline-warning mb-2">Livros Disponíveis</a>
+
     <!-- Mock API -->
-    <a href="/json-server"        class="btn btn-outline-secondary mb-2">Mock API</a>
+    <a href="/json-server" class="btn btn-outline-secondary mb-2">Mock API</a>
+
     <!-- Home / Logout -->
-    <a href="/home"               class="btn btn-outline-primary mb-2">Home</a>
-    <a href="/logout"             class="btn btn-outline-danger mb-2">Logout</a>
+    <a href="/home"   class="btn btn-outline-primary mb-2">Home</a>
+    <a href="/logout" class="btn btn-outline-danger mb-2">Logout</a>
 
     <hr style="width: 80%; margin: 20px auto;">
     {{{ body }}}

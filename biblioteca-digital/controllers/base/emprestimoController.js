@@ -1,51 +1,62 @@
-const db = require('../../config/db');
+const Emprestimo = require('../../models/emprestimo')
+const Usuario    = require('../../models/usuario')
+const Livro      = require('../../models/livro')
 
 module.exports = {
-  async getCreate(req, res) {
-    const leitores = await db.Leitor.findAll();
-    res.render('emprestimo/emprestimoCreate', {
-      leitores: leitores.map(leitor => leitor.toJSON())
-    });
+  getCreate: async (req, res) => {
+    const usuarios = await Usuario.find()
+    const livros   = await Livro.find()
+    res.render('emprestimo/emprestimoCreate', { usuarios, livros })
   },
 
-  async postCreate(req, res) {
-    await db.Emprestimo.create(req.body);
-    res.redirect('/emprestimoList');
+  postCreate: async (req, res) => {
+    try {
+      await new Emprestimo(req.body).save()
+      res.redirect('/emprestimoList')
+    } catch (err) {
+      console.error(err)
+      res.status(500).send('Erro ao criar empréstimo')
+    }
   },
 
-  async getList(req, res) {
-    const emprestimos = await db.Emprestimo.findAll({
-      include: [db.Leitor]
-    });
-
-    res.render('emprestimo/emprestimoList', {
-      emprestimos: emprestimos.map(e => ({
-        ...e.toJSON(),
-        nomeLeitor: e.leitor ? e.leitor.nome : 'Desconhecido'
-      }))
-    });
+  getList: async (req, res) => {
+    try {
+      const emprestimos = await Emprestimo.find()
+        .populate('usuario')
+        .populate('livro')
+      res.render('emprestimo/emprestimoList', { emprestimos })
+    } catch (err) {
+      console.error(err)
+      res.status(500).send('Erro ao listar empréstimos')
+    }
   },
 
-  async getUpdate(req, res) {
-    const emprestimo = await db.Emprestimo.findByPk(req.params.id);
-    const leitores = await db.Leitor.findAll();
+  getUpdate: async (req, res) => {
+    const emprestimo = await Emprestimo.findById(req.params.id)
+    const usuarios   = await Usuario.find()
+    const livros     = await Livro.find()
     res.render('emprestimo/emprestimoUpdate', {
-      emprestimo: emprestimo.toJSON(),
-      leitores: leitores.map(l => l.toJSON())
-    });
+      emprestimo, usuarios, livros
+    })
   },
 
-  async postUpdate(req, res) {
-    await db.Emprestimo.update(req.body, {
-      where: { id: req.body.id }
-    });
-    res.redirect('/emprestimoList');
+  postUpdate: async (req, res) => {
+    try {
+      await Emprestimo.findByIdAndUpdate(req.body.id, req.body)
+      res.redirect('/emprestimoList')
+    } catch (err) {
+      console.error(err)
+      res.status(500).send('Erro ao atualizar empréstimo')
+    }
   },
 
-  async getDelete(req, res) {
-    await db.Emprestimo.destroy({
-      where: { id: req.params.id }
-    });
-    res.redirect('/emprestimoList');
+  getDelete: async (req, res) => {
+    try {
+      await Emprestimo.findByIdAndDelete(req.params.id)
+      res.redirect('/emprestimoList')
+    } catch (err) {
+      console.error(err)
+      res.status(500).send('Erro ao excluir empréstimo')
+    }
   }
-};
+}
