@@ -7,7 +7,7 @@ const usuarioController    = require('../controllers/base/usuarioController');
 const categoriaController  = require('../controllers/base/categoriaController');
 const livroController      = require('../controllers/base/livroController');
 const autorController      = require('../controllers/base/autorController');
-const emprestimoController = require('../controllers/base/emprestimoController');
+const emprestimoController  = require('../controllers/base/emprestimoController')
 const logUsuarioController = require('../controllers/base/logUsuarioController');
 
 const { logRegister, sessionControl, adminOnly } = require('../middlewares/middlewares');
@@ -58,12 +58,12 @@ router.post('/autor/update/:id',adminOnly, autorController.postUpdate);
 router.get ('/autor/delete/:id',adminOnly, autorController.getDelete);
 router.get ('/autor/livros',       autorController.getBooks);
 
-router.get ('/emprestimo/list',       emprestimoController.getList);
-router.get ('/emprestimo/create',     emprestimoController.getCreate);
-router.post('/emprestimo/create',     emprestimoController.getCreate);
-router.get ('/emprestimo/update/:id', emprestimoController.getUpdate);
-router.post('/emprestimo/update/:id', emprestimoController.postUpdate);
-router.get ('/emprestimo/delete/:id', emprestimoController.getDelete);
+router.get  ('/emprestimo/list',     emprestimoController.getList)
+router.get  ('/emprestimo/create',   emprestimoController.getCreate)
+router.post ('/emprestimo/create',   emprestimoController.create)
+router.get  ('/emprestimo/update/:id', emprestimoController.getUpdate)
+router.post ('/emprestimo/update/:id', emprestimoController.update)
+router.get  ('/emprestimo/delete/:id', emprestimoController.delete)
 
 router.get ('/logUsuario/list', logUsuarioController.getList);
 

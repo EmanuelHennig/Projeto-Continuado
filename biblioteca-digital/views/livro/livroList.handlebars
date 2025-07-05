@@ -30,7 +30,11 @@
         <td>{{this.status}}</td>
         <td>
           <a href="/livro/update/{{this._id}}">Editar</a>
-          <a href="/livro/delete/{{this._id}}" onclick="return confirm('Confirma exclusão?')">Excluir</a>
+           <form action="/livro/delete/{{this._id}}" method="POST" style="display:inline">
+          <button type="submit"
+                  onclick="return confirm('Confirma exclusão deste livro?')">
+            Excluir
+          </button>
         </td>
       </tr>
     {{else}}
