@@ -1,13 +1,12 @@
-// controllers/base/categoriaController.js
 const Categoria = require('../../models/categoria');
 
 module.exports = {
-  // Exibe o formulário de criação de categoria
+
   getCreate: (req, res) => {
     res.render('categoria/categoriaCreate');
   },
 
-  // Processa o cadastro de uma nova categoria
+
   postCreate: async (req, res) => {
     try {
       await new Categoria(req.body).save();
@@ -18,7 +17,6 @@ module.exports = {
     }
   },
 
-  // Exibe a lista de categorias
   getList: async (req, res) => {
     try {
       const categorias = await Categoria.find().lean();
@@ -30,7 +28,6 @@ module.exports = {
     }
   },
 
-  // Exibe o formulário de edição, carregando a categoria pelo ID
   getUpdate: async (req, res) => {
     try {
       const categoria = await Categoria.findById(req.params.id).lean();
@@ -44,7 +41,6 @@ module.exports = {
     }
   },
 
-  // Processa a atualização de uma categoria existente
   postUpdate: async (req, res) => {
     try {
       const { id, nome } = req.body;
@@ -56,7 +52,6 @@ module.exports = {
     }
   },
 
-  // Exclui uma categoria pelo ID
   getDelete: async (req, res) => {
     try {
       await Categoria.findByIdAndDelete(req.params.id);

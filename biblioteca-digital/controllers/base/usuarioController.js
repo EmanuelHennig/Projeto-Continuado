@@ -1,8 +1,7 @@
-// controllers/base/usuarioController.js
 const Usuario = require('../../models/usuario')
 
 module.exports = {
-  // Processa o login
+
   postLogin: async (req, res) => {
     try {
       const { email, senha } = req.body
@@ -29,7 +28,6 @@ module.exports = {
     }
   },
 
-  // Faz logout destruindo a sessão
   getLogout: (req, res) => {
     req.session.destroy(err => {
       if (err) console.error(err)
@@ -37,12 +35,10 @@ module.exports = {
     })
   },
 
-  // Exibe o formulário de cadastro
   getCreate: (req, res) => {
     res.render('usuario/usuarioCreate')
   },
 
-  // Processa o cadastro de um novo usuário
   postCreate: async (req, res) => {
     try {
       await new Usuario(req.body).save()
@@ -53,7 +49,6 @@ module.exports = {
     }
   },
 
-  // Lista todos os usuários (usando .lean() para retornar objetos literais)
   getList: async (req, res) => {
     try {
       const usuarios = await Usuario.find().lean()
@@ -65,7 +60,6 @@ module.exports = {
     }
   },
 
-  // Exibe o formulário de edição carregando os dados do usuário
   getUpdate: async (req, res) => {
     try {
       const usuario = await Usuario.findById(req.params.id).lean()
@@ -76,7 +70,6 @@ module.exports = {
     }
   },
 
-  // Processa a atualização dos dados de um usuário
   postUpdate: async (req, res) => {
     try {
       await Usuario.findByIdAndUpdate(req.body.id, req.body)
@@ -87,7 +80,6 @@ module.exports = {
     }
   },
 
-  // Exclui um usuário pelo ID
   getDelete: async (req, res) => {
     try {
       await Usuario.findByIdAndDelete(req.params.id)

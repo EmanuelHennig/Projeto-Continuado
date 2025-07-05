@@ -10,13 +10,11 @@ const middlewares       = require('./middlewares/middlewares')
 const swaggerUI         = require('swagger-ui-express')
 const swaggerDocument   = require('./swagger.json')
 
-//const jsonServerRoutes  = require('./routes/jsonServerRoutes')
 const apiRoutes         = require('./routes/apiRoutes')
 const routes            = require('./routes/routes')
 
 const app = express()
 
-// — Conexão MongoDB
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
@@ -24,7 +22,6 @@ mongoose.connect(process.env.MONGO_URI, {
 .then(() => console.log('✔ MongoDB conectado'))
 .catch(err => console.error('✖ Erro MongoDB:', err))
 
-// — Middlewares básicos
 app.use(cors())
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(cookieParser())
@@ -37,28 +34,20 @@ app.use(session({
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 
-// — View engine
 app.engine('handlebars', exphbs.engine({ defaultLayout: 'main' }))
 app.set('view engine', 'handlebars')
 
-// — Middlewares customizados
 app.use(middlewares.logRegister)
 app.use(middlewares.sessionControl)
 
-// — Swagger UI
 app.use(
   '/api-docs',
   swaggerUI.serve,
   swaggerUI.setup(swaggerDocument, { explorer: true })
 )
 
-// — Rotas JSON-Server (Capítulo 17)
-//app.use(jsonServerRoutes)
-
-// — Rotas da sua API REST (protegidas / não protegidas via JWT)
 app.use('/api', apiRoutes)
 
-// — Rotas HTML
 app.use(routes)
 
 app.listen(8081, () => {

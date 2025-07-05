@@ -1,4 +1,3 @@
-// controllers/base/autorController.js
 const Autor = require('../../models/autor');
 const Livro = require('../../models/livro');
 
@@ -19,7 +18,7 @@ module.exports = {
 
   getList: async (req, res) => {
     try {
-      // <-- .lean() aqui
+ 
       const autores = await Autor.find().lean()
       console.log('→ autores encontrados:', autores)
       res.render('autor/autorList', { autores })
@@ -30,7 +29,7 @@ module.exports = {
   },
 
   getUpdate: async (req, res) => {
-    // também lean() aqui se for usar campos no template
+ 
     const autor = await Autor.findById(req.params.id).lean()
     res.render('autor/autorUpdate', { autor })
   },

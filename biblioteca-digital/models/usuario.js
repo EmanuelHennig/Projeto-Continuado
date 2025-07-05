@@ -17,7 +17,7 @@ const usuarioSchema = new Schema({
   },
   tipo_usuario: {
     type: String,
-    enum: ['aluno', 'professor', 'admin'],
+    enum: ['aluno', 'admin'],
     default: 'aluno'
   },
   cpf: {

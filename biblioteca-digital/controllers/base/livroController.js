@@ -1,17 +1,15 @@
-// controllers/base/livroController.js
 const Livro     = require('../../models/livro');
 const Categoria = require('../../models/categoria');
 const Autor     = require('../../models/autor');
 
 module.exports = {
-  // Formulário de criação
+
   getCreate: async (req, res) => {
     const categorias = await Categoria.find().lean();
     const autores    = await Autor.find().lean();
     res.render('livro/livroCreate', { categorias, autores });
   },
 
-  // Cria novo livro
   create: async (req, res) => {
     try {
       let { titulo, editora, ano_publicacao, isbn, categoria, status } = req.body;
@@ -25,7 +23,6 @@ module.exports = {
     }
   },
 
-  // Lista todos os livros
   getList: async (req, res) => {
     try {
       const livros = await Livro.find()
@@ -39,7 +36,6 @@ module.exports = {
     }
   },
 
-  // Formulário de edição
   getUpdate: async (req, res) => {
     try {
       const livro = await Livro.findById(req.params.id)
@@ -54,7 +50,6 @@ module.exports = {
     }
   },
 
-  // Atualiza um livro
   update: async (req, res) => {
     try {
       const { id, titulo, editora, ano_publicacao, isbn, categoria, status } = req.body;
@@ -68,7 +63,6 @@ module.exports = {
     }
   },
 
-  // Exclui um livro
   delete: async (req, res) => {
     try {
       await Livro.findByIdAndDelete(req.params.id);

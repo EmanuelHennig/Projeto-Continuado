@@ -17,13 +17,11 @@
       <h1>Biblioteca Digital</h1>
     </header>
 
-    {{!-- Links sempre visíveis após login --}}
     {{#if login}}
       <a href="/home" class="btn btn-outline-primary mb-2">Home</a>
       <a href="/logout" class="btn btn-outline-danger mb-2">Logout</a>
     {{/if}}
 
-    {{!-- Links só para ADM --}}
     {{#if admin}}
       <hr style="width:80%;margin:10px auto">
       <h5>Administração</h5>
@@ -39,7 +37,6 @@
       <a href="/livro/create"       class="btn btn-outline-warning mb-2">Novo Livro</a>
     {{/if}}
 
-    {{!-- Links acessíveis a qualquer usuário logado --}}
     {{#if login}}
       <hr style="width:80%;margin:10px auto">
       <h5>Operações Gerais</h5>
